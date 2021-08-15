@@ -1,6 +1,6 @@
 
   Pod::Spec.new do |s|
-    s.name = 'CapacitorCommunityMedia'
+    s.name = 'CapacitorCommunityMediaV2'
     s.version = '1.0.0'
     s.summary = 'Enable some media features for Capacitor such as create albums, save videos, gifs and more.'
     s.license = 'MIT'
