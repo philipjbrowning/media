@@ -1,6 +1,6 @@
 <p align="center"><br><img src="https://user-images.githubusercontent.com/236501/85893648-1c92e880-b7a8-11ea-926d-95355b8175c7.png" width="128" height="128" /></p>
 <h3 align="center">Capacitor Media</h3>
-<p align="center"><strong><code>@capacitor-community/media</code></strong></p>
+<p align="center"><strong><code>capacitor-community-media-v2</code></strong></p>
 <p align="center">
   Capacitor community plugin for enabling extra media capabilities
 </p>
@@ -21,24 +21,25 @@
 
 | Maintainer   | GitHub                                | Social                                          |
 | ------------ | ------------------------------------- | ----------------------------------------------- |
+| Philip Browning | [philipjbrowning](https://github.com/philipjbrowning) | [@PhilipJBrowning](https://twitter.com/philipjbrowning) |
 | Stewan Silva | [stewwan](https://github.com/stewwan) | [@StewanSilva](https://twitter.com/StewanSilva) |
 
 ## Notice 🚀
 
-We're starting fresh under an official org. If you were using the previous npm package `capacitor-media`, please update your package.json to `@capacitor-community/media`. Check out [changelog](/CHANGELOG.md) for more info.
+This library makes `@capacitor-community/media` work for Capacitor v2 applications. Check out [changelog](/CHANGELOG.md) for more info.
 
 ## Installation
 
 Using npm:
 
 ```bash
-npm install @capacitor-community/media
+npm install capacitor-community-media-v2
 ```
 
 Using yarn:
 
 ```bash
-yarn add @capacitor-community/media
+yarn add capacitor-community-media-v2
 ```
 
 Sync native files:
@@ -59,7 +60,7 @@ npx cap sync
 ## Usage
 
 ```js
-import { Media } from '@capacitor-community/media';
+import { Media } from 'capacitor-community-media-v2';
 const media = new Media();
 
 //
@@ -89,7 +90,7 @@ album: this.platform.is('ios') ? album.identifier : album.name;
 
 - `ionic start my-cap-app --capacitor`
 - `cd my-cap-app`
-- `npm install —-save @capacitor-community/media`
+- `npm install —-save capacitor-community-media-v2`
 - `mkdir www && touch www/index.html`
 - `npx cap add ios`
 - `npx cap open ios`
@@ -101,7 +102,7 @@ album: this.platform.is('ios') ? album.identifier : album.name;
 
 - `ionic start my-cap-app --capacitor`
 - `cd my-cap-app`
-- `npm install —-save @capacitor-community/media`
+- `npm install —-save capacitor-community-media-v2`
 - `mkdir www && touch www/index.html`
 - `npx cap add android`
 - `npx cap open android`
