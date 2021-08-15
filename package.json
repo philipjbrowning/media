@@ -1,6 +1,6 @@
 {
-  "name": "@capacitor-community/media",
-  "version": "1.0.2",
+  "name": "capacitor-community-media-v2",
+  "version": "1.0.1",
   "description": "Enable some media features for Capacitor such as create albums, save videos, gifs and more.",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -18,7 +18,7 @@
   "author": "Stewan Silva",
   "license": "MIT",
   "dependencies": {
-    "@capacitor/core": "2.4.9"
+    "@capacitor/core": "^2.4.6"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.16.0",
@@ -45,9 +45,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/capacitor-community/media"
+    "url": "https://github.com/philipjbrowning/media/media"
   },
   "bugs": {
-    "url": "https://github.com/capacitor-community/media/issues"
+    "url": "https://github.com/philipjbrowning/mediaissues"
   }
 }
