@@ -55,27 +55,29 @@ public class MediaPlugin extends Plugin {
         Log.d("DEBUG LOG", "___GET ALBUMS");
 
         JSObject response = new JSObject();
-        JSArray albums = new JSArray();
         StringBuffer list = new StringBuffer();
 
-        String[] projection = new String[]{"DISTINCT " + MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+        String[] projection = new String[]{MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
         Cursor cur = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+
+        HashMap<String, Album> albums = HashMap<String, Album>();
 
         while (cur.moveToNext()) {
             String albumName = cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME)));
-            JSObject album = new JSObject();
 
-            list.append(albumName + "\n");
-
-            album.put("name", albumName);
-            albums.put(album);
+            if (albums[albumName] == null) {
+                JSObject album = new JSObject();
+                list.append(albumName + "\n");
+                album.put("name", albumName);
+                album[albumName] = album;
+            }
         }
 
         response.put("albums", albums);
-        Log.d("DEBUG LOG", String.valueOf(response));
+        Log.d("DEBUG LOG", String.valueOf(list));
         Log.d("DEBUG LOG", "___GET ALBUMS FINISHED");
 
-        call.resolve(response);
+        call.resolve(findAlbums.values.toList();
     }
 
 
