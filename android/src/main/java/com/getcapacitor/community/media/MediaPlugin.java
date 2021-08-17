@@ -1,7 +1,7 @@
 package com.getcapacitor.community.media;
 
 import android.Manifest;
-import android.content.Intent;
+ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -28,8 +28,8 @@ import java.util.HashMap;
 
 
 @NativePlugin(permissions = {
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE
 })
 public class MediaPlugin extends Plugin {
 
@@ -83,7 +83,7 @@ public class MediaPlugin extends Plugin {
             }
         }
 
-        response.put("albums", album);
+        response.put("albums", albums);
         Log.d("DEBUG LOG", String.valueOf(list));
         Log.d("DEBUG LOG", "___GET ALBUMS FINISHED");
 
@@ -114,13 +114,9 @@ public class MediaPlugin extends Plugin {
     private void _createAlbum(PluginCall call) {
         Log.d("DEBUG LOG", "___CREATE ALBUM");
         String folderName = call.getString("name");
-        String folder;
 
-        if (Build.VERSION.SDK_INT >= 29) {
-            folder = getContext().getExternalMediaDirs()[0].getAbsolutePath()+"/"+folderName;
-        }else{
-            folder = Environment.getExternalStoragePublicDirectory(folderName).toString();
-        }
+        // TODO: Assume android:requestLegacyExternalStorage="true"
+        String folder = Environment.getExternalStoragePublicDirectory(folderName).toString();
 
         Log.d("ENV STORAGE", folder);
 
@@ -140,7 +136,6 @@ public class MediaPlugin extends Plugin {
         }
 
     }
-
 
     @PluginMethod()
     public void savePhoto(PluginCall call) {
@@ -169,7 +164,6 @@ public class MediaPlugin extends Plugin {
         }
     }
 
-
     @PluginMethod()
     public void saveGif(PluginCall call) {
         Log.d("DEBUG LOG", "SAVE GIF TO ALBUM");
@@ -183,10 +177,9 @@ public class MediaPlugin extends Plugin {
         }
     }
 
-
     private void _saveMedia(PluginCall call, String destination) {
         String dest;
-        if (destination == "MOVIES") {
+        if (destination.equals("MOVIES")) {
             dest = Environment.DIRECTORY_MOVIES;
         } else {
             dest = Environment.DIRECTORY_PICTURES;
@@ -203,36 +196,31 @@ public class MediaPlugin extends Plugin {
         File inputFile = new File(inputUri.getPath());
 
         String album = call.getString("album");
-        File albumDir = null;
-        String albumPath;
+        File albumDir;
+
         Log.d("SDK BUILD VERSION", String.valueOf(Build.VERSION.SDK_INT));
 
-        if (Build.VERSION.SDK_INT >= 29) {
-            albumPath = getContext().getExternalMediaDirs()[0].getAbsolutePath();
-        } else {
-            albumPath = Environment.getExternalStoragePublicDirectory(dest).getAbsolutePath();
-        }
-
-        // Log.d("ENV LOG", String.valueOf(getContext().getExternalMediaDirs()));
+        // TODO: Assume android:requestLegacyExternalStorage="true"
+        String albumPath = Environment.getExternalStoragePublicDirectory(dest).getAbsolutePath();
 
         if (album != null) {
             albumDir = new File(albumPath, album);
-        }else{
+
+            Log.d("ENV LOG - ALBUM DIR", String.valueOf(albumDir));
+
+            try {
+                File expFile = copyFile(inputFile, albumDir);
+                scanPhoto(expFile);
+
+                JSObject result = new JSObject();
+                result.put("filePath", expFile.toString());
+                call.resolve(result);
+
+            } catch (RuntimeException e) {
+                call.reject("RuntimeException occurred", e);
+            }
+        } else {
             call.error("album name required");
-        }
-
-        Log.d("ENV LOG - ALBUM DIR", String.valueOf(albumDir));
-
-        try {
-            File expFile = copyFile(inputFile, albumDir);
-            scanPhoto(expFile);
-
-            JSObject result = new JSObject();
-            result.put("filePath", expFile.toString());
-            call.resolve(result);
-
-        } catch (RuntimeException e) {
-            call.reject("RuntimeException occurred", e);
         }
 
     }
@@ -271,7 +259,7 @@ public class MediaPlugin extends Plugin {
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         } catch (IOException e) {
-            throw new RuntimeException("Error transfering file, error: " + e.getMessage());
+            throw new RuntimeException("Error transferring file, error: " + e.getMessage());
         } finally {
             if (inChannel != null) {
                 try {
@@ -315,7 +303,7 @@ public class MediaPlugin extends Plugin {
         pluginRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1986);
         if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             call.success();
-        }else{
+        } else {
             call.error("permission denied");
         }
     }
