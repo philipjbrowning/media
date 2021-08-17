@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 
 @NativePlugin(permissions = {
@@ -58,26 +58,29 @@ public class MediaPlugin extends Plugin {
         StringBuffer list = new StringBuffer();
 
         String[] projection = new String[]{MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME};
+
         Cursor cur = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 
-        HashMap<String, Album> albums = HashMap<String, Album>();
+        HashMap<String, JSObject> albums = new HashMap<>();
 
         while (cur.moveToNext()) {
             String albumName = cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME)));
 
-            if (albums[albumName] == null) {
+            if (albums.get(albumName) == null) {
                 JSObject album = new JSObject();
-                list.append(albumName + "\n");
+                list.append(albumName).append("\n");
                 album.put("name", albumName);
-                album[albumName] = album;
+                albums.put(albumName, album);
             }
         }
 
-        response.put("albums", albums);
+        response.put("albums", albums.values().toArray());
         Log.d("DEBUG LOG", String.valueOf(list));
         Log.d("DEBUG LOG", "___GET ALBUMS FINISHED");
 
-        call.resolve(findAlbums.values.toList();
+        cur.close();
+
+        call.resolve(response);
     }
 
 
