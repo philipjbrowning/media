@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
@@ -61,20 +62,28 @@ public class MediaPlugin extends Plugin {
 
         Cursor cur = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 
-        HashMap<String, JSObject> albums = new HashMap<>();
+        HashMap<String, JSObject> albumsMap = new HashMap<>();
+        JSArray albums = new JSArray();
 
         while (cur.moveToNext()) {
             String albumName = cur.getString((cur.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME)));
 
-            if (albums.get(albumName) == null) {
+            if (albumsMap.get(albumName) == null) {
                 JSObject album = new JSObject();
-                list.append(albumName).append("\n");
                 album.put("name", albumName);
-                albums.put(albumName, album);
+
+                // String list to show values in log
+                list.append(albumName).append("\n");
+
+                // Map for uniqueness
+                albumsMap.put(albumName, album);
+
+                // Array to resolve
+                albums.put(album);
             }
         }
 
-        response.put("albums", albums.values().toArray());
+        response.put("albums", album);
         Log.d("DEBUG LOG", String.valueOf(list));
         Log.d("DEBUG LOG", "___GET ALBUMS FINISHED");
 
@@ -200,8 +209,7 @@ public class MediaPlugin extends Plugin {
 
         if (Build.VERSION.SDK_INT >= 29) {
             albumPath = getContext().getExternalMediaDirs()[0].getAbsolutePath();
-
-        }else{
+        } else {
             albumPath = Environment.getExternalStoragePublicDirectory(dest).getAbsolutePath();
         }
 
